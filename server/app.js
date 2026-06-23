@@ -22,14 +22,15 @@ app.use((req, res, next) => {
 });
 
 // Database connection
-const MONGO_URL = "mongodb://127.0.0.1:27017/smart_complaint";
+
+const dbUrl = process.env.MONGO_URL;
 main().then(() => {
     console.log("connected to DB");
 }).catch(err => {
     console.log(err);
 });
 async function main(){
-    await mongoose.connect(MONGO_URL);
+    await mongoose.connect(dbUrl);
     
 }
 // Routes

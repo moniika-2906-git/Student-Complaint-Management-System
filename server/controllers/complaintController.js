@@ -20,7 +20,7 @@ const createComplaint = async (req, res) => {
         // No email to admins
         res.status(201).json({ message: 'Complaint submitted successfully', complaint });
     } catch (error) {
-        console.error(error); // This will print the real error in your backend terminal
+        console.error(error); 
         res.status(500).json({ message: 'Server error' });
     }
 };
@@ -70,28 +70,34 @@ const getAllComplaints = async (req, res) => {
 const assignComplaint = async (req, res) => {
     try {
         const { staffId } = req.body;
-        
+
         // Validate staffId is provided
         if (!staffId) {
             return res.status(400).json({ message: 'Staff ID is required.' });
         }
-        
+
         // Check if staff exists and is actually a staff member
         const staff = await User.findOne({ _id: staffId, role: 'staff' });
         if (!staff) {
             return res.status(400).json({ message: 'Invalid staff member selected.' });
         }
-        
+
+        // const complaint = await Complaint.findByIdAndUpdate(
+        //     req.params.id,
+        //     { assignedTo: staffId, status: 'in-progress', updatedAt: Date.now() },
+        //     { new: true }
+        // );
+
+        // ✅ fixed
         const complaint = await Complaint.findByIdAndUpdate(
             req.params.id,
             { assignedTo: staffId, status: 'in-progress', updatedAt: Date.now() },
-            { new: true }
+            { returnDocument: 'after' }
         );
-        
         if (!complaint) {
             return res.status(404).json({ message: 'Complaint not found.' });
         }
-        
+
         // Send email to staff notifying assignment
         try {
             await sendResolutionEmail(
@@ -104,7 +110,7 @@ const assignComplaint = async (req, res) => {
             console.error('Error sending assignment email to staff:', mailError);
             // Optionally, do not fail the request if email fails
         }
-        
+
         console.log(`Complaint ${complaint._id} assigned to staff ${staff.name || staff.email}`);
         res.json(complaint);
     } catch (error) {
@@ -238,22 +244,22 @@ const staffUpdateComplaint = async (req, res) => {
 const getComplaintStats = async (req, res) => {
     try {
         console.log('getComplaintStats called');
-        
+
         const totalComplaints = await Complaint.countDocuments();
         console.log('Total complaints:', totalComplaints);
-        
+
         const resolvedComplaints = await Complaint.countDocuments({ status: 'resolved' });
         console.log('Resolved complaints:', resolvedComplaints);
-        
+
         // Calculate average response time (time from submission to first staff update)
-        const resolvedComplaintsWithUpdates = await Complaint.find({ 
+        const resolvedComplaintsWithUpdates = await Complaint.find({
             status: 'resolved',
             'staffUpdates.0': { $exists: true }
         });
-        
+
         let totalResponseTime = 0;
         let countWithResponseTime = 0;
-        
+
         resolvedComplaintsWithUpdates.forEach(complaint => {
             if (complaint.staffUpdates && complaint.staffUpdates.length > 0) {
                 const firstUpdate = complaint.staffUpdates[0];
@@ -262,17 +268,17 @@ const getComplaintStats = async (req, res) => {
                 countWithResponseTime++;
             }
         });
-        
-        const avgResponseTime = countWithResponseTime > 0 
+
+        const avgResponseTime = countWithResponseTime > 0
             ? Math.round(totalResponseTime / countWithResponseTime / (1000 * 60 * 60)) // Convert to hours
             : 24; // Default 24 hours if no data
-        
+
         const stats = {
             total: totalComplaints,
             resolved: resolvedComplaints,
             avgResponseTime: avgResponseTime
         };
-        
+
         console.log('Returning stats:', stats);
         res.json(stats);
     } catch (error) {
@@ -281,29 +287,29 @@ const getComplaintStats = async (req, res) => {
     }
 };
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
+// const transporter = nodemailer.createTransport({
+//     host: 'smtp.gmail.com',
+//     port: 587,
+//     secure: false,
+//     auth: {
+//         user: process.env.EMAIL_USER,
+//         pass: process.env.EMAIL_PASS
+//     }
+// });
 
-transporter.sendMail({
-    // from: 'YOUR_EMAIL@gmail.com',
-    // to: 'YOUR_EMAIL@gmail.com',
-    from: process.env.EMAIL_USER,
-    to: process.env.EMAIL_USER,
-    subject: 'Test Email',
-    text: 'This is a test'
-}, (err, info) => {
-    if (err) {
-        return console.error('Error:', err);
-    }
-    console.log('Sent:', info.response);
-});
+// transporter.sendMail({
+//     // from: 'YOUR_EMAIL@gmail.com',
+//     // to: 'YOUR_EMAIL@gmail.com',
+//     from: process.env.EMAIL_USER,
+//     to: process.env.EMAIL_USER,
+//     subject: 'Test Email',
+//     text: 'This is a test'
+// }, (err, info) => {
+//     if (err) {
+//         return console.error('Error:', err);
+//     }
+//     console.log('Sent:', info.response);
+// });
 
 module.exports = {
     createComplaint,
