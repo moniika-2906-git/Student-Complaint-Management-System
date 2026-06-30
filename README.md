@@ -109,7 +109,7 @@ cd complaint-system
 npm install
 ```
 
-Create a `.env` file inside `complait-system/`:
+Create a `.env` file inside `complaint-system/`:
 
 ```env
 VITE_API_URL=https://your.bacakend.render.com
