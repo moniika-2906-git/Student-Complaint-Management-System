@@ -1,6 +1,6 @@
 # 🎯 Smart Complaint Management System
 
-A full-stack web application that streamlines complaint submission, tracking, and resolution — with role-based access for **Users**, **Staff**, and **Admins**.
+A full-stack web application that streamlines complaint submission, tracking, and resolution — with role-based access for **Users**, **Staff**, and **Admin**.
 
 ---
 
