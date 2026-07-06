@@ -4,10 +4,8 @@ import { Box, Button, TextField, Typography, Paper, Alert, MenuItem } from '@mui
 import API from '../../api/axios'
 
 
-// const Register = () => {
-//   const navigate = useNavigate()
-//   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'student', department: '' })
 const Register = ({ defaultRole = 'student' }) => {
+  const navigate = useNavigate()
   const [form, setForm] = useState({ name: '', email: '', password: '', role: defaultRole, department: '' })
   
 
