@@ -10,15 +10,20 @@ const Register = ({ defaultRole = 'student' }) => {
   
 
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
+    setSuccess('')
     try {
       await API.post('/auth/register', form)
-      navigate('/login')
+      setSuccess('Registration successful! Redirecting to login...')
+      setTimeout(() => {
+        navigate('/login')
+      }, 1500)
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed')
     }
@@ -29,16 +34,17 @@ const Register = ({ defaultRole = 'student' }) => {
       <Paper elevation={3} sx={{ p: 4, width: 400 }}>
         <Typography variant="h6" sx={{ textAlign: 'center', mb: 2 }}>Register</Typography>
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+        {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
         <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <TextField label="Full Name" name="name" value={form.name} onChange={handleChange} required fullWidth />
-          <TextField label="Email" name="email" type="email" value={form.email} onChange={handleChange} required fullWidth />
-          <TextField label="Password" name="password" type="password" value={form.password} onChange={handleChange} required fullWidth />
-          <TextField label="Department" name="department" value={form.department} onChange={handleChange} required fullWidth />
-          <TextField select label="Role" name="role" value={form.role} onChange={handleChange} fullWidth>
+          <TextField label="Full Name" name="name" value={form.name} onChange={handleChange} required fullWidth disabled={!!success} />
+          <TextField label="Email" name="email" type="email" value={form.email} onChange={handleChange} required fullWidth disabled={!!success} />
+          <TextField label="Password" name="password" type="password" value={form.password} onChange={handleChange} required fullWidth disabled={!!success} />
+          <TextField label="Department" name="department" value={form.department} onChange={handleChange} required fullWidth disabled={!!success} />
+          <TextField select label="Role" name="role" value={form.role} onChange={handleChange} fullWidth disabled={!!success}>
             <MenuItem value="student">Student</MenuItem>
             <MenuItem value="staff">Staff</MenuItem>
           </TextField>
-          <Button type="submit" variant="contained" fullWidth sx={{ mt: 1 }}>Register</Button>
+          <Button type="submit" variant="contained" fullWidth sx={{ mt: 1 }} disabled={!!success}>Register</Button>
           <Typography sx={{ textAlign: 'center' }} variant="body2">
             Already have an account? <Link to="/login">Login</Link>
           </Typography>
