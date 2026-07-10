@@ -210,6 +210,7 @@ npm run dev
 ## 👩‍💻 Author
 
 **Monika** — [GitHub](https://github.com/moniika-2906-git) ·
+view my previous account -[Github](https://github.com/monika-2906-git).
 
 ---
 
