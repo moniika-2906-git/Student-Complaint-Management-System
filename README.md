@@ -73,7 +73,7 @@ The project Link is [https://student-complaint-management-system-chi.vercel.app/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/smart-complaint-management-system.git
+git clone https://github.com/moniika-2906-git/smart-complaint-management-system.git
 cd smart-complaint-management-system
 ```
 
