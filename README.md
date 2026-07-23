@@ -4,7 +4,7 @@ A full-stack web application that streamlines complaint submission, tracking, an
 
 ---
 
-## 🚀 Live Demo
+##  Live Demo
 The project Link is [https://student-complaint-management-system-chi.vercel.app/]
 - **Frontend:** (https://student-complaint-management-system-chi.vercel.app/)
 - **Backend API:** (https://student-complaint-management-system-1hvh.onrender.com)
