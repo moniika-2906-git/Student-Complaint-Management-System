@@ -17,7 +17,7 @@ The project Link is [https://student-complaint-management-system-chi.vercel.app/
 - Register & login securely with JWT authentication
 - Submit complaints with title, description, and category
 - Track complaint status in real-time
-- View complaint history
+
 
 ### 🛠️ Staff
 - View complaints assigned by admin
